@@ -11,7 +11,9 @@ import org.springframework.web.servlet.view.document.AbstractXlsView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,11 @@ public class ListarAlumnosExcel extends AbstractXlsView {
     @Override
     protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request,
                                       HttpServletResponse response) throws Exception {
-        response.setHeader("Content-Disposition","attachment; filename=\"listado-alumnos.xlsx\"");
+
+        LocalDate fecha = LocalDate.now();
+        fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        response.setHeader("Content-Disposition","attachment; filename=\"listado-alumnos-"+fecha+".xlsx\"");
         log.info("Exportando listado general de alumnos a Excel");
 
         ControllerInicio controllerInicio;
