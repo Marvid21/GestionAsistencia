@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring/security">
+    <head>
+        <meta charset="UTF-8">
+        <title>Listado de Alumnos</title>
+    </head>
+    <body>
+        <section th:fragment="listadoAlumno" id="alumnos">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{alumno.titulo-lista}]]</h4>
+                                <p class="float-start" th:text="${#temporals.format(localDateTime, 'dd-MM-yyyy')}"></p>
+                            </div>
+                            <table id="table_alumno" class="table table-strped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th class="text-center" th:text="#{alumno.cedula}">Cedula</th>
+                                        <th class="text-center" th:text="#{alumno.nombre}">Nombre</th>
+                                        <a sec:authorize="hasRole('ROLE_ADMIN')"><th class="text-center">Asistencia</th></a>
+                                        <a sec:authorize="hasRole('ROLE_ADMIN')"><th class="text-center">Adulapuntos</th></a>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="alumno: ${alumnos}">
+                                        <td class="text-center">[[${alumno.idAlumnos}]]</td>
+                                        <td class="text-center">[[${alumno.alCedula}]]</td>
+                                        <td>[[${alumno.alApellido} + ', ' + ${alumno.alNombre}]]</td>
+                                        <td>
+                                            <a sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <select class="form-control col-sm-2 text-center" th:for="alAsistencia">
+                                                    <option disabled>Selecciona</option>
+                                                    <option th:each="opcion: ${asiste}" th:value="${opcion}"
+                                                            th:name="asistencia" th:text="${opcion}"></option>
+                                                </select>
+                                            </a>
+                                        </td>
+                                        <td th:align="center">
+                                            <a sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <select class="form-control w-25" th:for="alAdulaPuntos" >
+                                                    <option th:each="opcion: ${adula}" th:value="${opcion}"
+                                                            th:text="${opcion}"></option>
+                                                </select>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <form action="#" th:action="@{/guardar}" th:object="${alumno}" method="post"
+                                  class="was-validated">
+<!--                                <input type="hidden" name="idAlumnos" th:field="*{idAlumnos}"/>-->
+<!--                                <input id="alAsistencia" th:id="alAsistencia" type="hidden" class="form-control" th:field="*{alAsistencia}">-->
+<!--                                <input id="alAdulaPuntos" th:id="alAdulaPuntos" type="hidden" class="form-control" th:field="*{alAdulaPuntos}">-->
+                                <a sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <div class="col-md-9">
+                                        <button type="submit" class="btn btn-success btn-block">
+                                            <a class="nav-link float-end" th:href="@{/(format=xlsx)}"
+                                               title="Guardar y Exportar a Excel" target="_blank">
+                                                <i class="fas fa-circle-check"></i> Guardar y Generar Excel
+                                            </a>
+                                        </button>
+                                    </div>
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
